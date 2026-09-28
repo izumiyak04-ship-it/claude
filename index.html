@@ -1,0 +1,385 @@
+<title>目白発 おでかけ探検マップ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap">
+<style>
+:root{
+  --paper:#f3f5ee; --card:#ffffff; --ink:#1c2a36; --muted:#5c6a70; --line:#d8ddd0;
+  --grass:#2f7d4f; --grass-soft:#e2efe4; --sign:#f0b400; --sign-ink:#3a2a00; --road:#d9542a; --road-soft:#fbe6dc;
+  --focus:#1f6fd1;
+  --display:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;
+  --body:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --paper:#151c1f; --card:#1e272b; --ink:#e9eee6; --muted:#9aa8aa; --line:#33403f;
+    --grass:#6cc48e; --grass-soft:#20352a; --sign:#f5c431; --sign-ink:#2a1f00; --road:#f07a50; --road-soft:#3a241c; --focus:#6aa8ff;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#151c1f; --card:#1e272b; --ink:#e9eee6; --muted:#9aa8aa; --line:#33403f;
+  --grass:#6cc48e; --grass-soft:#20352a; --sign:#f5c431; --sign-ink:#2a1f00; --road:#f07a50; --road-soft:#3a241c; --focus:#6aa8ff;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.7;padding-inline:16px;padding-block:0 48px}
+.wrap{max-width:1080px;margin:0 auto}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+
+header.hero{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;padding-block:28px 12px}
+.eyebrow{font-family:var(--display);font-weight:800;font-size:12px;letter-spacing:.14em;color:var(--grass)}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(28px,5vw,44px);line-height:1.2;margin:4px 0 8px;text-wrap:balance}
+h1 .sign{display:inline-block;background:var(--sign);color:var(--sign-ink);border-radius:6px;padding:0 .25em;transform:rotate(-2deg)}
+.lead{color:var(--muted);max-width:60ch;margin:0}
+.rings{width:150px;height:150px}
+.rings text{font-family:var(--display);font-weight:800;fill:var(--ink)}
+@media (max-width:620px){header.hero{grid-template-columns:1fr}.rings{display:none}}
+
+h2{font-family:var(--display);font-weight:800;font-size:20px;margin:0}
+section{margin-top:28px}
+.sec-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:12px}
+.sec-head p{margin:0;color:var(--muted);font-size:13px}
+
+/* today's pick */
+.today{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;background:var(--card);border:2px solid var(--ink);border-radius:14px;padding:18px 20px;box-shadow:5px 5px 0 var(--sign)}
+.today .badge{font-family:var(--display);font-weight:800;background:var(--road);color:#fff;border-radius:50%;width:74px;height:74px;display:grid;place-items:center;text-align:center;font-size:13px;line-height:1.25}
+.today h3{font-family:var(--display);font-size:22px;margin:0}
+.today p{margin:4px 0 0}
+@media (max-width:520px){.today{grid-template-columns:1fr}}
+
+/* filters */
+.filters{display:grid;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.frow{display:grid;grid-template-columns:7.5em 1fr;gap:10px;align-items:center}
+.frow > .lab{font-weight:700;font-size:13px;color:var(--muted)}
+@media (max-width:560px){.frow{grid-template-columns:1fr;gap:4px}}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:inherit;font-size:13px;border:1.5px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.road{display:flex;align-items:center;gap:12px}
+.road input{flex:1;accent-color:var(--road)}
+.road output{font-family:var(--display);font-weight:800;min-width:6.5em;font-variant-numeric:tabular-nums}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{font:inherit;font-weight:700;border:2px solid var(--ink);background:var(--sign);color:var(--sign-ink);border-radius:10px;padding:7px 16px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:default}
+.count{color:var(--muted);font-size:13px;margin-left:auto;font-variant-numeric:tabular-nums}
+
+/* cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;grid-template-rows:auto auto 1fr auto;gap:6px}
+.card.flash{outline:3px solid var(--sign);outline-offset:2px}
+.ctop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.card h3{font-family:var(--display);font-weight:800;font-size:17px;line-height:1.35;margin:0}
+.area{font-size:12px;color:var(--muted)}
+.time{flex:none;font-family:var(--display);font-weight:800;font-size:13px;background:var(--road-soft);color:var(--road);border-radius:8px;padding:2px 8px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tags{display:flex;flex-wrap:wrap;gap:4px}
+.tag{font-size:11px;background:var(--grass-soft);color:var(--grass);border-radius:5px;padding:1px 7px;font-weight:700}
+.tag.rain{background:var(--road-soft);color:var(--road)}
+.why{margin:0;font-size:14px}
+.links{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;font-weight:700;padding-top:6px;border-top:1px dashed var(--line)}
+.links a{color:var(--grass);text-decoration:none}
+.links a:hover{text-decoration:underline}
+.empty{padding:24px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px}
+
+/* AI */
+.ai{background:var(--card);border:2px solid var(--grass);border-radius:14px;padding:18px}
+.ai-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:12px}
+.ai-form label{display:grid;gap:3px;font-size:12px;font-weight:700;color:var(--muted)}
+.ai-form select,.ai-form input{font:inherit;font-size:14px;padding:6px 8px;border:1.5px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);width:100%}
+.ai-form .wide{grid-column:1/-1}
+.status{font-size:13px;color:var(--muted);min-height:1.5em}
+.note{font-size:12px;color:var(--muted);margin-top:10px}
+footer{margin-top:36px;font-size:12px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+<header class="hero">
+  <div>
+    <div class="eyebrow">目白駅から車で片道2時間まで</div>
+    <h1>小学生男子が<span class="sign">よろこぶ</span>おでかけ先</h1>
+    <p class="lead">乗り物、恐竜、生き物、アスレチック。条件をえらぶと行き先がしぼりこまれます。「AIに探してもらう」では、その日の天気や気分に合わせて新しい候補を出してもらえます。</p>
+  </div>
+  <svg class="rings" viewBox="0 0 150 150" role="img" aria-label="目白からの所要時間の輪">
+    <circle cx="75" cy="75" r="70" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="4 5"/>
+    <circle cx="75" cy="75" r="52" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="4 5"/>
+    <circle cx="75" cy="75" r="34" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="4 5"/>
+    <circle cx="75" cy="75" r="16" fill="var(--road-soft)" stroke="var(--road)" stroke-width="2"/>
+    <circle cx="75" cy="75" r="5" fill="var(--road)"/>
+    <text x="75" y="12" text-anchor="middle" font-size="9">2時間</text>
+    <text x="75" y="30" text-anchor="middle" font-size="9">90分</text>
+    <text x="75" y="48" text-anchor="middle" font-size="9">60分</text>
+    <text x="75" y="102" text-anchor="middle" font-size="10">目白</text>
+  </svg>
+</header>
+
+<section aria-labelledby="today-h">
+  <div class="sec-head"><h2 id="today-h">今日のイチオシ</h2><p id="today-date"></p></div>
+  <div class="today" id="today"></div>
+</section>
+
+<section aria-labelledby="find-h">
+  <div class="sec-head"><h2 id="find-h">条件でさがす</h2><p>所要時間は目白からの車の目安（渋滞なし）です</p></div>
+  <div class="filters">
+    <div class="frow">
+      <span class="lab" id="lab-time">片道の時間</span>
+      <div class="road">
+        <input type="range" id="f-time" min="30" max="120" step="15" value="120" aria-labelledby="lab-time">
+        <output id="f-time-out" for="f-time">2時間まで</output>
+      </div>
+    </div>
+    <div class="frow">
+      <span class="lab">ジャンル</span>
+      <div class="chips" id="f-genre"></div>
+    </div>
+    <div class="frow">
+      <span class="lab">天気</span>
+      <div class="chips" id="f-place"></div>
+    </div>
+    <div class="frow">
+      <span class="lab">おこづかい</span>
+      <div class="chips" id="f-cost"></div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="random" type="button">この中からおまかせ1つ</button>
+      <button class="btn ghost" id="reset" type="button">条件をリセット</button>
+      <span class="count" id="count" aria-live="polite"></span>
+    </div>
+  </div>
+  <div class="grid" id="list" style="margin-top:14px"></div>
+</section>
+
+<section aria-labelledby="ai-h" id="ai-sec">
+  <div class="sec-head"><h2 id="ai-h">AIに探してもらう</h2><p>リストにない場所や、季節のおすすめを提案します</p></div>
+  <div class="ai">
+    <div class="ai-form">
+      <label for="ai-grade">学年
+        <select id="ai-grade">
+          <option>1〜2年生</option><option selected>3〜4年生</option><option>5〜6年生</option>
+        </select>
+      </label>
+      <label for="ai-weather">天気
+        <select id="ai-weather"><option>晴れ</option><option>くもり</option><option>雨</option><option>とても暑い</option><option>寒い</option></select>
+      </label>
+      <label for="ai-time">片道の時間
+        <select id="ai-time"><option value="60">1時間まで</option><option value="90">1時間半まで</option><option value="120" selected>2時間まで</option></select>
+      </label>
+      <label for="ai-stay">滞在
+        <select id="ai-stay"><option>半日</option><option selected>1日</option></select>
+      </label>
+      <label for="ai-like" class="wide">好きなもの・今日の気分（自由に）
+        <input id="ai-like" type="text" value="電車と恐竜が好き。思いきり体を動かしたい">
+      </label>
+    </div>
+    <div class="actions">
+      <button class="btn" id="ai-go" type="button">この条件で探す</button>
+      <button class="btn ghost" id="ai-stop" type="button" hidden>止める</button>
+      <span class="status" id="ai-status" aria-live="polite"></span>
+    </div>
+    <div class="grid" id="ai-list" style="margin-top:14px"></div>
+    <p class="note">AIの提案は学習した知識にもとづくため、閉館・休館日・料金の変更が反映されていないことがあります。出発前に公式サイトで確認してください。</p>
+  </div>
+</section>
+
+<footer>所要時間はおおよその目安です。休日の首都高・アクアライン・関越道などは大きく延びることがあります。営業日と料金は各施設の公式情報で確認してください。</footer>
+</div>
+
+<script>
+const GENRES = ["乗り物","科学・宇宙","恐竜・化石","生き物","体を動かす","自然・川海山","遊園地","体験・ものづくり"];
+const COSTS = [["free","無料"],["low","〜1,000円"],["mid","〜3,000円"],["high","それ以上"]];
+// [名前, エリア, 分, ジャンル, 屋内?(true=雨OK), 費用, ひとこと]
+const SPOTS = [
+ ["消防博物館","新宿区 四谷三丁目",20,["乗り物"],true,"free","本物の消防ヘリや歴代の消防車に乗れる。無料なのに満足度が高い"],
+ ["ワーナー ブラザース スタジオツアー東京","練馬区",15,["体験・ものづくり"],true,"high","ハリー・ポッターの映画セットを歩ける。ほうきに乗る撮影体験も"],
+ ["東京おもちゃ美術館","新宿区 四谷",20,["体験・ものづくり"],true,"low","木のおもちゃや昔遊び。低学年向き、雨の日の定番"],
+ ["国立科学博物館","台東区 上野",25,["恐竜・化石","科学・宇宙"],true,"low","フタバスズキリュウや恐竜の骨格がずらり。1日いても回りきれない"],
+ ["上野動物園","台東区 上野",25,["生き物"],false,"low","パンダ、ゴリラ、トラ。科学博物館とはしごもできる"],
+ ["東京ドームシティ アトラクションズ","文京区 後楽園",20,["遊園地"],false,"mid","街なかのジェットコースター。宇宙ミュージアムTeNQも隣"],
+ ["多摩六都科学館","西東京市",30,["科学・宇宙"],true,"low","世界最大級のプラネタリウム。実験ショーも楽しい"],
+ ["浅草 花やしき","台東区 浅草",30,["遊園地"],false,"mid","日本最古の遊園地。レトロなローラーコースターがスリル満点"],
+ ["すみだ水族館","墨田区 押上",30,["生き物"],true,"mid","スカイツリーの下。ペンギンとチンアナゴを間近で"],
+ ["東京タワー","港区 芝公園",30,["科学・宇宙"],true,"mid","600段の外階段を自分の足で登れる（土日祝中心）"],
+ ["キッザニア東京","江東区 豊洲",35,["体験・ものづくり"],true,"high","パイロットや消防士など100以上の仕事を体験。要予約"],
+ ["日本科学未来館","江東区 お台場",35,["科学・宇宙"],true,"low","ロボットや地球ディスプレイ。考える展示が多く高学年におすすめ"],
+ ["しながわ水族館","品川区 勝島",35,["生き物"],true,"low","イルカ・アシカショーと海のトンネル。料金が手ごろ"],
+ ["国立天文台 三鷹","三鷹市",40,["科学・宇宙"],false,"free","100年前の大望遠鏡ドームを見学。無料で静かな穴場"],
+ ["地下鉄博物館","江戸川区 葛西",40,["乗り物"],true,"low","運転シミュレーターと本物の車両。料金は大人220円ほど"],
+ ["葛西臨海水族園","江戸川区",40,["生き物"],true,"low","大水槽のマグロの群泳。隣の公園で観覧車とバーベキュー"],
+ ["羽田空港 展望デッキ","大田区",40,["乗り物"],false,"free","目の前を飛行機が発着。JAL・ANAの整備工場見学（要予約）も"],
+ ["鉄道博物館","さいたま市 大宮",45,["乗り物"],true,"mid","本物の車両がずらりと並び、運転シミュレーターも。電車好きなら一日遊べる"],
+ ["所沢航空発祥記念館","所沢市",45,["乗り物","科学・宇宙"],true,"low","本物の飛行機やヘリの操縦席に座れる。外の公園も広い"],
+ ["西武園ゆうえんち","所沢市",45,["遊園地"],false,"high","昭和の街並みとゴジラのライド。夏はプールも"],
+ ["よみうりランド","稲城市",45,["遊園地","体験・ものづくり"],false,"high","絶叫系が充実。ものづくり体験エリアのグッジョバも"],
+ ["カップヌードルミュージアム 横浜","横浜市 みなとみらい",45,["体験・ものづくり"],true,"low","自分だけのカップヌードルを作って持ち帰れる"],
+ ["原鉄道模型博物館","横浜市 みなとみらい",45,["乗り物"],true,"low","世界最大級のジオラマを模型列車が走る"],
+ ["三菱みなとみらい技術館","横浜市 みなとみらい",45,["科学・宇宙","乗り物"],true,"low","ロケットエンジンや潜水艇。ものの仕組みが好きな子に"],
+ ["京急ミュージアム","横浜市 高島",45,["乗り物"],true,"free","京急の実車と運転シミュレーター。無料（整理券制の日あり）"],
+ ["多摩動物公園","日野市",50,["生き物","自然・川海山"],false,"low","広い園内を歩いてライオンやコアラに会う。歩く距離はかなり長め"],
+ ["国営昭和記念公園","立川市",50,["体を動かす","自然・川海山"],false,"low","巨大なトランポリン遊具「雲の海」と自転車コース"],
+ ["海ほたる PA","東京湾アクアライン",55,["乗り物","自然・川海山"],false,"free","海の上のパーキング。巨大トンネル掘削機のカッターも展示"],
+ ["清水公園 フィールドアスレチック","千葉県 野田市",60,["体を動かす"],false,"mid","100以上のアスレチック。水上コースで落ちるのも思い出に"],
+ ["高尾山","八王子市",60,["自然・川海山","体を動かす"],false,"low","ケーブルカーで途中まで。山頂でそば、帰りはリフト"],
+ ["国営武蔵丘陵森林公園","埼玉県 滑川町",60,["体を動かす","自然・川海山"],false,"low","大きなポンポン山とアスレチック、サイクリングコース"],
+ ["ふなばしアンデルセン公園","千葉県 船橋市",60,["体を動かす","自然・川海山"],false,"low","アスレチックとじゃぶじゃぶ池。遊具の数が多い"],
+ ["東武動物公園","埼玉県 宮代町",60,["生き物","遊園地"],false,"mid","動物園と遊園地がいっしょ。夏はプールも"],
+ ["航空科学博物館","千葉県 芝山町",80,["乗り物","科学・宇宙"],true,"low","成田空港の横。ジャンボ機の実物大シミュレーターと着陸機の迫力"],
+ ["JAXA 筑波宇宙センター","茨城県 つくば市",70,["科学・宇宙"],true,"free","実物大のISSきぼう棟やロケットが見られる。無料"],
+ ["地図と測量の科学館","茨城県 つくば市",70,["科学・宇宙"],true,"free","日本列島の巨大立体模型の上を歩ける。無料"],
+ ["東京ドイツ村","千葉県 袖ケ浦市",70,["体を動かす","遊園地"],false,"mid","広い芝生でソリ、ゴーカート、パターゴルフ。冬はイルミネーション"],
+ ["相模湖プレジャーフォレスト","神奈川県 相模原市",75,["体を動かす","遊園地"],false,"high","空中アスレチックやジップライン。1日たっぷり遊べる"],
+ ["マザー牧場","千葉県 富津市",80,["生き物","体を動かす"],false,"mid","ひつじの大行進と乳しぼり。アドベンチャーアスレチックも"],
+ ["埼玉県立 川の博物館","埼玉県 寄居町",80,["体験・ものづくり","自然・川海山"],false,"low","日本一の大水車と荒川の立体模型。夏は水遊び"],
+ ["筑波山","茨城県 つくば市",80,["自然・川海山","体を動かす"],false,"mid","ケーブルカーとロープウェイ。山頂のガマ岩をくぐる"],
+ ["新江ノ島水族館","神奈川県 藤沢市",80,["生き物"],true,"mid","相模湾の大水槽とイルカショー。帰りに江の島散策"],
+ ["横須賀 軍港めぐり・三笠","神奈川県 横須賀市",80,["乗り物"],false,"mid","船から本物の護衛艦や潜水艦を見られる。戦艦三笠も見学"],
+ ["観音崎 自然博物館と磯遊び","神奈川県 横須賀市",80,["自然・川海山","生き物"],false,"low","潮だまりでカニや小魚さがし。干潮の時間を調べて行こう"],
+ ["千葉県立 房総のむら","千葉県 栄町",85,["体験・ものづくり"],false,"low","江戸時代の町並みで手裏剣投げやものづくり体験"],
+ ["長瀞 ライン下り・岩畳","埼玉県 長瀞町",100,["自然・川海山"],false,"mid","舟で急流を下る。岩畳で川遊び、近くに埼玉県立自然の博物館"],
+ ["箱根 大涌谷","神奈川県 箱根町",100,["自然・川海山","乗り物"],false,"mid","もくもく噴煙の中をロープウェイで。黒たまごは1個食べると寿命が7年のびるとか"],
+ ["富士急ハイランド","山梨県 富士吉田市",100,["遊園地"],false,"high","FUJIYAMAなど絶叫マシン。身長制限を事前に確認"],
+ ["鴨川シーワールド","千葉県 鴨川市",105,["生き物"],true,"high","シャチのパフォーマンスは水しぶき必至。着替えを持って"],
+ ["鳴沢氷穴・富岳風穴","山梨県 鳴沢村",110,["自然・川海山","体を動かす"],false,"low","真夏でも0℃の溶岩洞窟を探検。上着を持っていこう"],
+ ["国営ひたち海浜公園","茨城県 ひたちなか市",110,["遊園地","自然・川海山","体を動かす"],false,"mid","秋のコキア、観覧車、大型遊具、サイクリングまで"],
+ ["アクアワールド茨城県大洗水族館","茨城県 大洗町",110,["生き物"],true,"mid","サメの飼育種類が日本一クラス。サメ好きは必見"],
+ ["碓氷峠鉄道文化むら","群馬県 安中市",120,["乗り物"],false,"low","電気機関車の運転体験（講習あり）とミニSL。電車好きの聖地"],
+].map((s,i)=>({id:i,name:s[0],area:s[1],min:s[2],genres:s[3],indoor:s[4],cost:s[5],why:s[6]}));
+
+const state = {time:120, genres:new Set(), place:"all", costs:new Set()};
+const $ = id => document.getElementById(id);
+
+function fmtTime(m){ if(m<60) return `約${m}分`; const h=Math.floor(m/60), r=m%60; return r?`約${h}時間${r}分`:`約${h}時間`; }
+function costLabel(c){ return (COSTS.find(x=>x[0]===c)||[,""])[1]; }
+function mapsRoute(name,area){ return "https://www.google.com/maps/dir/?api=1&origin="+encodeURIComponent("目白駅")+"&destination="+encodeURIComponent(name+" "+(area||""))+"&travelmode=driving"; }
+function googleSearch(name){ return "https://www.google.com/search?q="+encodeURIComponent(name+" 公式 営業時間"); }
+
+function el(tag,attrs={},...kids){ const e=document.createElement(tag); for(const[k,v] of Object.entries(attrs)){ if(k==="class") e.className=v; else e.setAttribute(k,v);} for(const k of kids) if(k!=null) e.append(k); return e; }
+
+function card(s){
+  const tags = el("div",{class:"tags"});
+  for(const g of s.genres) tags.append(el("span",{class:"tag"},g));
+  if(s.indoor) tags.append(el("span",{class:"tag rain"},"雨でもOK"));
+  if(s.cost) tags.append(el("span",{class:"tag"},costLabel(s.cost)||s.cost));
+  const links = el("div",{class:"links"},
+    el("a",{href:mapsRoute(s.name,s.area),target:"_blank",rel:"noopener"},"目白からの道順"),
+    el("a",{href:googleSearch(s.name),target:"_blank",rel:"noopener"},"営業日を調べる"));
+  return el("article",{class:"card","data-id":String(s.id??"")},
+    el("div",{class:"ctop"}, el("div",{}, el("h3",{},s.name), el("div",{class:"area"},s.area)), el("span",{class:"time"},fmtTime(s.min))),
+    tags, el("p",{class:"why"},s.why), links);
+}
+
+function filtered(){
+  return SPOTS.filter(s=>s.min<=state.time
+    && (state.genres.size===0 || s.genres.some(g=>state.genres.has(g)))
+    && (state.place==="all" || (state.place==="in"?s.indoor:!s.indoor))
+    && (state.costs.size===0 || state.costs.has(s.cost))).sort((a,b)=>a.min-b.min);
+}
+function render(){
+  const list=$("list"), items=filtered();
+  list.replaceChildren(...items.map(card));
+  if(!items.length) list.append(el("div",{class:"empty"},"条件に合う場所がありません。時間をのばすか、ジャンルを減らしてみてください。"));
+  $("count").textContent = `${items.length}か所 / 全${SPOTS.length}か所`;
+  $("f-time-out").textContent = state.time>=120?"2時間まで":fmtTime(state.time).replace("約","")+"まで";
+  $("random").disabled = !items.length;
+  save();
+}
+
+function chipGroup(host, options, isOn, toggle){
+  host.replaceChildren(...options.map(([val,label])=>{
+    const b=el("button",{class:"chip",type:"button","aria-pressed":String(isOn(val))},label);
+    b.addEventListener("click",()=>{toggle(val); chipGroup(host,options,isOn,toggle); render();});
+    return b;
+  }));
+}
+function buildFilters(){
+  chipGroup($("f-genre"), GENRES.map(g=>[g,g]), v=>state.genres.has(v), v=>state.genres.has(v)?state.genres.delete(v):state.genres.add(v));
+  chipGroup($("f-place"), [["all","どちらでも"],["in","雨の日（屋内）"],["out","晴れの日（屋外）"]], v=>state.place===v, v=>state.place=v);
+  chipGroup($("f-cost"), COSTS, v=>state.costs.has(v), v=>state.costs.has(v)?state.costs.delete(v):state.costs.add(v));
+  $("f-time").value=state.time;
+}
+
+function save(){ try{ localStorage.setItem("mejiro-filters",JSON.stringify({time:state.time,genres:[...state.genres],place:state.place,costs:[...state.costs]})); }catch(e){} }
+function load(){ try{ const d=JSON.parse(localStorage.getItem("mejiro-filters")||"null"); if(d){ state.time=d.time||120; state.genres=new Set(d.genres||[]); state.place=d.place||"all"; state.costs=new Set(d.costs||[]);} }catch(e){} }
+
+// 今日のイチオシ: 日付と季節から毎日1つ自動で選ぶ
+function todayPick(){
+  const d=new Date(), m=d.getMonth()+1;
+  const season = (m>=7&&m<=8)?"summer":(m===12||m<=2)?"winter":"mild";
+  const seed = d.getFullYear()*372 + m*31 + d.getDate();
+  let pool = SPOTS;
+  if(season==="summer") pool = SPOTS.filter(s=>s.indoor || s.genres.includes("自然・川海山"));
+  if(season==="winter") pool = SPOTS.filter(s=>s.indoor || s.genres.includes("遊園地"));
+  const s = pool[(seed*2654435761>>>0) % pool.length];
+  const seasonMsg = {summer:"暑い季節なので、屋内か水辺の場所から選びました。",winter:"寒い季節なので、屋内中心に選びました。",mild:"外遊びにちょうどいい季節です。"}[season];
+  $("today-date").textContent = `${m}月${d.getDate()}日 ・ 毎日かわります`;
+  $("today").replaceChildren(
+    el("div",{class:"badge"},"今日の", el("br"), "行き先"),
+    el("div",{}, el("h3",{},s.name),
+      el("p",{},`${s.area}・${fmtTime(s.min)}。${s.why}`),
+      el("p",{class:"area"},seasonMsg+" "),
+      el("div",{class:"links",style:"border:0;padding:4px 0 0"},
+        el("a",{href:mapsRoute(s.name,s.area),target:"_blank",rel:"noopener"},"目白からの道順"),
+        el("a",{href:googleSearch(s.name),target:"_blank",rel:"noopener"},"営業日を調べる"))));
+}
+
+$("f-time").addEventListener("input",e=>{state.time=+e.target.value; render();});
+$("reset").addEventListener("click",()=>{state.time=120;state.genres.clear();state.place="all";state.costs.clear();buildFilters();render();});
+$("random").addEventListener("click",()=>{
+  const items=filtered(); if(!items.length) return;
+  const s=items[Math.floor(Math.random()*items.length)];
+  const node=document.querySelector(`#list .card[data-id="${s.id}"]`);
+  document.querySelectorAll("#list .card.flash").forEach(n=>n.classList.remove("flash"));
+  if(node){ node.classList.add("flash"); node.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"center"}); }
+});
+
+load(); buildFilters(); render(); todayPick();
+
+// ---- AIに探してもらう ----
+let sample=null, ctl=null;
+(async()=>{
+  try{ sample = window.claude ? await window.claude.use("sample") : null; }catch(e){ sample=null; }
+  if(!sample){ $("ai-go").disabled=true; $("ai-status").textContent="この画面ではAI検索を使えません（claude.ai で開くと使えます）。上のリストは使えます。"; }
+})();
+
+const ERR = {not_granted:"AIの利用が許可されませんでした。上のリストから選んでください。",rate_limited:"いま混み合っています。少し時間をおいてもう一度押してください。",invalid_json:"答えをうまく読み取れませんでした。もう一度押してください。"};
+
+$("ai-stop").addEventListener("click",()=>ctl?.abort());
+$("ai-go").addEventListener("click",async()=>{
+  if(!sample) return;
+  const d=new Date();
+  const cond = {
+    学年:$("ai-grade").value, 天気:$("ai-weather").value, 片道の上限分:+$("ai-time").value,
+    滞在:$("ai-stay").value, 好み:$("ai-like").value.trim(), 今日:`${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（${"日月火水木金土"[d.getDay()]}）`
+  };
+  const known = SPOTS.map(s=>s.name).join("、");
+  const prompt = `あなたは東京の子連れおでかけに詳しい案内係です。東京都豊島区の目白に住む家族が、小学生の男の子と車で出かけます。
+条件: ${JSON.stringify(cond)}
+目白から車で片道${cond.片道の上限分}分以内（渋滞なしの目安）で、この子が楽しめる場所を6か所提案してください。
+- 季節（今日の日付）と天気に合うもの。雨なら屋内中心、暑ければ水辺や屋内。
+- 実在して現在も営業している施設だけ。閉館した施設は出さない。
+- 次のリストにある場所は既に知っているので、できるだけ別の場所を優先（ぴったりなら2つまで含めてよい）: ${known}
+- 季節限定のイベントや体験があれば理由に書く。
+JSON配列だけで答えてください。形式:
+[{"name":"施設名","area":"都県 市区町村","driveMinutes":60,"genres":["乗り物"],"indoor":true,"why":"子どもが楽しめる理由を1〜2文","tip":"持ち物や予約などのコツ1文"}]`;
+  ctl = new AbortController();
+  $("ai-go").disabled=true; $("ai-stop").hidden=false;
+  $("ai-status").textContent="探しています…（30秒ほどかかることがあります）";
+  $("ai-list").replaceChildren();
+  try{
+    const res = await sample.json(prompt,{signal:ctl.signal});
+    const arr = Array.isArray(res)?res:[];
+    const items = arr.filter(x=>x&&typeof x.name==="string").slice(0,8).map(x=>({
+      name:x.name, area:String(x.area||""), min:Math.max(10,Math.round(+x.driveMinutes||0))||60,
+      genres:Array.isArray(x.genres)?x.genres.map(String).slice(0,3):[], indoor:!!x.indoor, cost:"",
+      why:[x.why,x.tip].filter(Boolean).map(String).join(" ／ ")
+    })).sort((a,b)=>a.min-b.min);
+    $("ai-list").replaceChildren(...items.map(card));
+    $("ai-status").textContent = items.length?`${items.length}か所 見つかりました。`:"候補が見つかりませんでした。条件を変えてみてください。";
+  }catch(e){
+    $("ai-status").textContent = e?.code==="cancelled" ? "止めました。" : (ERR[e?.code] || "うまく探せませんでした。もう一度押してください。");
+  }finally{
+    $("ai-go").disabled=false; $("ai-stop").hidden=true;
+  }
+});
+</script>
