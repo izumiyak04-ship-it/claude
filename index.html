@@ -68,7 +68,7 @@ section{margin-top:28px}
 
 /* cards */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;grid-template-rows:auto auto 1fr auto;gap:6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
 .card.flash{outline:3px solid var(--sign);outline-offset:2px}
 .ctop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .card h3{font-family:var(--display);font-weight:800;font-size:17px;line-height:1.35;margin:0}
@@ -77,7 +77,7 @@ section{margin-top:28px}
 .tags{display:flex;flex-wrap:wrap;gap:4px}
 .tag{font-size:11px;background:var(--grass-soft);color:var(--grass);border-radius:5px;padding:1px 7px;font-weight:700}
 .tag.rain{background:var(--road-soft);color:var(--road)}
-.why{margin:0;font-size:14px}
+.why{margin:0;font-size:14px;flex:1}
 .links{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;font-weight:700;padding-top:6px;border-top:1px dashed var(--line)}
 .links a{color:var(--grass);text-decoration:none}
 .links a:hover{text-decoration:underline}
@@ -91,6 +91,26 @@ section{margin-top:28px}
 .ai-form .wide{grid-column:1/-1}
 .status{font-size:13px;color:var(--muted);min-height:1.5em}
 .note{font-size:12px;color:var(--muted);margin-top:10px}
+/* sources */
+.src{display:flex;flex-wrap:wrap;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.sb{display:inline-block;border-radius:4px;padding:0 6px;font-weight:700;font-size:11px;text-decoration:none;border:1.5px solid currentColor}
+.sb-ikoyo{color:#1f8a3b}.sb-enjoy{color:#c2185b}.sb-rurubu{color:#d35400}.sb-list{color:var(--muted)}.sb-ai{color:#5b5fc7}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .sb-ikoyo{color:#6fd48a}:root:not([data-theme="light"]) .sb-enjoy{color:#f48fb1}:root:not([data-theme="light"]) .sb-rurubu{color:#ffab70}:root:not([data-theme="light"]) .sb-ai{color:#a9acff}}
+:root[data-theme="dark"] .sb-ikoyo{color:#6fd48a}:root[data-theme="dark"] .sb-enjoy{color:#f48fb1}:root[data-theme="dark"] .sb-rurubu{color:#ffab70}:root[data-theme="dark"] .sb-ai{color:#a9acff}
+a.sb:hover{text-decoration:underline}
+
+/* 4 weeks */
+.weeks{display:grid;gap:18px}
+.week{border-top:3px solid var(--ink);padding-top:10px}
+.week-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin-bottom:10px}
+.week-head h3{font-family:var(--display);font-weight:800;font-size:17px;margin:0}
+.week-head span{font-size:13px;color:var(--muted)}
+.when{font-size:13px;font-weight:700;color:var(--road)}
+.last{font-size:11px;font-weight:800;background:var(--sign);color:var(--sign-ink);border-radius:5px;padding:1px 7px}
+.card.std{background:transparent;border-style:dashed}
+.site-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;font-size:13px}
+.site-links a{font-weight:700}
+.stale{background:var(--road-soft);color:var(--road);border-radius:8px;padding:8px 12px;font-size:13px;font-weight:700}
 footer{margin-top:36px;font-size:12px;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -100,7 +120,7 @@ footer{margin-top:36px;font-size:12px;color:var(--muted)}
   <div>
     <div class="eyebrow">目白駅から車で片道2時間まで</div>
     <h1>小学生男子が<span class="sign">よろこぶ</span>おでかけ先</h1>
-    <p class="lead">乗り物、恐竜、生き物、アスレチック。条件をえらぶと行き先がしぼりこまれます。「AIに探してもらう」では、その日の天気や気分に合わせて新しい候補を出してもらえます。</p>
+    <p class="lead">乗り物、恐竜、生き物、アスレチック。いこーよ・レッツエンジョイ東京・るるぶKids のイベントから、これから4週間の候補を週ごとに並べています。「AIに探してもらう」では、その日の天気や気分に合わせて新しい候補を出してもらえます。</p>
   </div>
   <svg class="rings" viewBox="0 0 150 150" role="img" aria-label="目白からの所要時間の輪">
     <circle cx="75" cy="75" r="70" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="4 5"/>
@@ -118,6 +138,24 @@ footer{margin-top:36px;font-size:12px;color:var(--muted)}
 <section aria-labelledby="today-h">
   <div class="sec-head"><h2 id="today-h">今日のイチオシ</h2><p id="today-date"></p></div>
   <div class="today" id="today"></div>
+</section>
+
+<section aria-labelledby="weeks-h">
+  <div class="sec-head"><h2 id="weeks-h">これから4週間の候補</h2><p id="weeks-range"></p></div>
+  <div class="filters" style="margin-bottom:14px">
+    <p style="margin:0;font-size:13px">いこーよ・レッツエンジョイ東京・るるぶKids に掲載されている、目白から車で2時間以内のイベントを週ごとに並べています。各カードの色つきラベルが情報源で、押すとその掲載ページが開きます。<span id="checked"></span></p>
+    <div class="frow">
+      <span class="lab">情報源</span>
+      <div class="chips" id="f-src"></div>
+    </div>
+  </div>
+  <div id="stale"></div>
+  <div class="weeks" id="weeks"></div>
+  <div class="site-links">最新情報を3サイトで見る:
+    <a class="sb sb-ikoyo" href="https://iko-yo.net/events?region_ids%5B%5D=3&amp;tags%5B%5D=%E7%94%B7%E3%81%AE%E5%AD%90" target="_blank" rel="noopener">いこーよ（関東・男の子）</a>
+    <a class="sb sb-enjoy" href="https://www.enjoytokyo.jp/event/list/ranking/scn03/" target="_blank" rel="noopener">レッツエンジョイ東京（子供と行きたいイベント）</a>
+    <a class="sb sb-rurubu" href="https://kids.rurubu.jp/area/6/2086/" target="_blank" rel="noopener">るるぶKids（関東のイベント）</a>
+  </div>
 </section>
 
 <section aria-labelledby="find-h">
@@ -179,7 +217,7 @@ footer{margin-top:36px;font-size:12px;color:var(--muted)}
       <span class="status" id="ai-status" aria-live="polite"></span>
     </div>
     <div class="grid" id="ai-list" style="margin-top:14px"></div>
-    <p class="note">AIの提案は学習した知識にもとづくため、閉館・休館日・料金の変更が反映されていないことがあります。出発前に公式サイトで確認してください。</p>
+    <p class="note">AIの提案には「AIの提案（未確認）」のラベルがつきます。いこーよなどのサイトを見て答えているのではなく、AIが学習した知識にもとづくため、閉館・休館日・料金の変更が反映されていないことがあります。出発前に公式サイトで確認してください。</p>
   </div>
 </section>
 
@@ -224,6 +262,7 @@ const SPOTS = [
  ["国営武蔵丘陵森林公園","埼玉県 滑川町",60,["体を動かす","自然・川海山"],false,"low","大きなポンポン山とアスレチック、サイクリングコース"],
  ["ふなばしアンデルセン公園","千葉県 船橋市",60,["体を動かす","自然・川海山"],false,"low","アスレチックとじゃぶじゃぶ池。遊具の数が多い"],
  ["東武動物公園","埼玉県 宮代町",60,["生き物","遊園地"],false,"mid","動物園と遊園地がいっしょ。夏はプールも"],
+ ["陸上自衛隊広報センター りっくんランド","埼玉県 朝霞市",30,["乗り物"],true,"free","本物の戦車やヘリコプターの操縦席に座れる。入館無料",[{site:"ikoyo",url:"https://iko-yo.net/facilities/1646"},{site:"enjoy",url:"https://www.enjoytokyo.jp/spot/n_20384/"}]],
  ["航空科学博物館","千葉県 芝山町",80,["乗り物","科学・宇宙"],true,"low","成田空港の横。ジャンボ機の実物大シミュレーターと着陸機の迫力"],
  ["JAXA 筑波宇宙センター","茨城県 つくば市",70,["科学・宇宙"],true,"free","実物大のISSきぼう棟やロケットが見られる。無料"],
  ["地図と測量の科学館","茨城県 つくば市",70,["科学・宇宙"],true,"free","日本列島の巨大立体模型の上を歩ける。無料"],
@@ -244,7 +283,7 @@ const SPOTS = [
  ["国営ひたち海浜公園","茨城県 ひたちなか市",110,["遊園地","自然・川海山","体を動かす"],false,"mid","秋のコキア、観覧車、大型遊具、サイクリングまで"],
  ["アクアワールド茨城県大洗水族館","茨城県 大洗町",110,["生き物"],true,"mid","サメの飼育種類が日本一クラス。サメ好きは必見"],
  ["碓氷峠鉄道文化むら","群馬県 安中市",120,["乗り物"],false,"low","電気機関車の運転体験（講習あり）とミニSL。電車好きの聖地"],
-].map((s,i)=>({id:i,name:s[0],area:s[1],min:s[2],genres:s[3],indoor:s[4],cost:s[5],why:s[6]}));
+].map((s,i)=>({id:i,name:s[0],area:s[1],min:s[2],genres:s[3],indoor:s[4],cost:s[5],why:s[6],sources:s[7]||[{site:"list"}]}));
 
 const state = {time:120, genres:new Set(), place:"all", costs:new Set()};
 const $ = id => document.getElementById(id);
@@ -256,17 +295,35 @@ function googleSearch(name){ return "https://www.google.com/search?q="+encodeURI
 
 function el(tag,attrs={},...kids){ const e=document.createElement(tag); for(const[k,v] of Object.entries(attrs)){ if(k==="class") e.className=v; else e.setAttribute(k,v);} for(const k of kids) if(k!=null) e.append(k); return e; }
 
-function card(s){
+const SOURCES = {
+  ikoyo:{label:"いこーよ",cls:"sb-ikoyo"},
+  enjoy:{label:"レッツエンジョイ東京",cls:"sb-enjoy"},
+  rurubu:{label:"るるぶKids",cls:"sb-rurubu"},
+  list:{label:"定番リスト（このページ独自）",cls:"sb-list"},
+  ai:{label:"AIの提案（未確認）",cls:"sb-ai"},
+};
+function srcRow(sources){
+  const row = el("div",{class:"src"},"出典:");
+  for(const x of sources||[]){
+    const m = SOURCES[x.site]; if(!m) continue;
+    row.append(x.url ? el("a",{class:"sb "+m.cls,href:x.url,target:"_blank",rel:"noopener",title:"掲載ページを開く"},m.label) : el("span",{class:"sb "+m.cls},m.label));
+  }
+  return row;
+}
+
+function card(s,opt={}){
   const tags = el("div",{class:"tags"});
   for(const g of s.genres) tags.append(el("span",{class:"tag"},g));
   if(s.indoor) tags.append(el("span",{class:"tag rain"},"雨でもOK"));
   if(s.cost) tags.append(el("span",{class:"tag"},costLabel(s.cost)||s.cost));
+  if(opt.last) tags.append(el("span",{class:"last"},"この週で終了"));
   const links = el("div",{class:"links"},
-    el("a",{href:mapsRoute(s.name,s.area),target:"_blank",rel:"noopener"},"目白からの道順"),
-    el("a",{href:googleSearch(s.name),target:"_blank",rel:"noopener"},"営業日を調べる"));
-  return el("article",{class:"card","data-id":String(s.id??"")},
-    el("div",{class:"ctop"}, el("div",{}, el("h3",{},s.name), el("div",{class:"area"},s.area)), el("span",{class:"time"},fmtTime(s.min))),
-    tags, el("p",{class:"why"},s.why), links);
+    el("a",{href:mapsRoute(s.venue||s.name,s.area),target:"_blank",rel:"noopener"},"目白からの道順"),
+    el("a",{href:googleSearch(s.name),target:"_blank",rel:"noopener"},"公式情報を調べる"));
+  return el("article",{class:"card"+(opt.std?" std":""),"data-id":String(s.id??"")},
+    el("div",{class:"ctop"}, el("div",{}, el("h3",{},s.name), el("div",{class:"area"},(s.venue?s.venue+"・":"")+s.area)), el("span",{class:"time"},fmtTime(s.min))),
+    s.when ? el("div",{class:"when"},s.when) : null,
+    tags, el("p",{class:"why"},s.why), srcRow(s.sources), links);
 }
 
 function filtered(){
@@ -333,7 +390,86 @@ $("random").addEventListener("click",()=>{
   if(node){ node.classList.add("flash"); node.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"center"}); }
 });
 
-load(); buildFilters(); render(); todayPick();
+// ---- これから4週間 ----
+// 2026年9月28日に、いこーよ・レッツエンジョイ東京・るるぶKids の掲載情報をWeb検索で確認して作成
+const DATA_CHECKED = "2026-09-28";
+const EVENTS = [
+ {name:"特別展「大哺乳類展3 わけてつなげて大行進」",venue:"国立科学博物館",area:"台東区 上野",min:25,start:"2026-07-11",end:"2026-10-12",
+  when:"〜10月12日(月・祝) 9:00〜17:00 ／ 9月28日(月)は休館",genres:["生き物","科学・宇宙"],indoor:true,cost:"mid",
+  why:"初公開を含む約200点の哺乳類の標本が大行進。常設の恐竜展示とあわせて1日楽しめる",
+  sources:[{site:"ikoyo",url:"https://iko-yo.net/events/414792"},{site:"rurubu",url:"https://kids.rurubu.jp/article/157082/"},{site:"enjoy",url:"https://www.enjoytokyo.jp/event/1531566/"}]},
+ {name:"ピクサーの世界展",venue:"CREVIA BASE Tokyo",area:"江東区 豊洲",min:35,start:"2026-03-20",end:"2026-10-12",
+  when:"〜10月12日(月・祝) 10:00〜20:50",genres:["体験・ものづくり"],indoor:true,cost:"high",
+  why:"トイ・ストーリーやカーズなど24体以上の等身大キャラクターと映画の世界に入れる没入型展示。日本初上陸",
+  sources:[{site:"enjoy",url:"https://www.enjoytokyo.jp/event/2054820/"},{site:"ikoyo",url:"https://iko-yo.net/events/552390"},{site:"rurubu",url:"https://kids.rurubu.jp/article/226022/"}]},
+ {name:"都民の日 葛西臨海水族園が入園無料",venue:"葛西臨海水族園",area:"江戸川区",min:40,start:"2026-10-01",end:"2026-10-01",
+  when:"10月1日(木)のみ・平日",genres:["生き物"],indoor:true,cost:"free",
+  why:"マグロの大水槽やペンギンが無料で見られる日。学校がお休みなら狙い目。ほかの都立施設も無料・割引あり",
+  sources:[{site:"enjoy",url:"https://www.enjoytokyo.jp/article/107326/"},{site:"rurubu",url:"https://kids.rurubu.jp/article/243299/"}]},
+ {name:"公園フェスタ",venue:"駒沢オリンピック公園",area:"世田谷区",min:30,start:"2026-10-04",end:"2026-10-04",
+  when:"10月4日(日)・入場無料",genres:["体を動かす"],indoor:false,cost:"free",
+  why:"広い公園での無料イベント。自転車やスケボー広場もある公園なので、体を動かしたい日に",
+  sources:[{site:"ikoyo",url:"https://report.iko-yo.net/trend/events?prefecture=13&tag=233"}]},
+ {name:"秋の夜のどうぶつえん",venue:"上野動物園",area:"台東区 上野",min:25,start:"2026-10-09",end:"2026-10-12",
+  when:"10月9日(金)〜12日(月・祝) 20:00まで開園（入園は19:00まで）",genres:["生き物"],indoor:false,cost:"low",
+  why:"ふだんは見られない夜の動物の様子を観察できる4日間だけの延長開園。秋の虫の声も楽しめる",
+  sources:[{site:"ikoyo",url:"https://report.iko-yo.net/articles/33717"}]},
+ {name:"第33回 鉄道フェスティバル",venue:"お台場 イーストプロムナード",area:"江東区 お台場",min:35,start:"2026-10-10",end:"2026-10-11",
+  when:"10月10日(土)・11日(日) 10:00〜17:00・入場無料",genres:["乗り物"],indoor:false,cost:"free",
+  why:"「鉄道の日」記念で全国の鉄道会社が集まる。例年はミニSLの試乗やキャラクターショーも。会場は例年の日比谷公園ではなくお台場と掲載されているので公式で確認を",
+  sources:[{site:"ikoyo",url:"https://report.iko-yo.net/articles/33666"},{site:"enjoy",url:"https://www.enjoytokyo.jp/event/666363/"}]},
+ {name:"企画展「動く・回る・つながる からくりの科学」",venue:"KDDI MUSEUM",area:"多摩市",min:45,start:"2026-08-21",end:"2026-11-20",
+  when:"〜11月20日(金)",genres:["科学・宇宙","体験・ものづくり"],indoor:true,cost:"",
+  why:"歯車やカムで動く仕掛けのしくみがわかる展示。通信の歴史の常設展も。予約・料金は公式で確認を",
+  sources:[{site:"ikoyo",url:"https://iko-yo.net/facilities/185343"},{site:"rurubu",url:"https://kids.rurubu.jp/article/152079/"}]},
+ {name:"東京スカイツリー × ちいかわ コラボ",venue:"東京スカイツリー",area:"墨田区 押上",min:30,start:"2026-07-10",end:"2026-10-31",
+  when:"〜10月31日(土)",genres:["科学・宇宙"],indoor:true,cost:"high",
+  why:"天望デッキの巨大スクリーンで特別映像。展望台に上るならこの期間が楽しい",
+  sources:[{site:"ikoyo",url:"https://report.iko-yo.net/articles/31761"},{site:"rurubu",url:"https://kids.rurubu.jp/article/152079/"}]},
+ {name:"無料入園日＋ファミリースポーツレクリエーション",venue:"国営昭和記念公園",area:"立川市",min:50,start:"2026-10-24",end:"2026-10-25",
+  when:"10月24日(土)・25日(日)は入園無料 ／ スポーツ体験は24日のみ",genres:["体を動かす","自然・川海山"],indoor:false,cost:"free",
+  why:"入園無料の2日間。巨大トランポリン遊具「雲の海」やサイクリングに加え、24日は家族で遊べるスポーツ体験も。コスモスまつりも開催",
+  sources:[{site:"enjoy",url:"https://www.enjoytokyo.jp/event/2066565/"},{site:"ikoyo",url:"https://iko-yo.net/events/571922"}]},
+].map((e,i)=>({...e,id:"e"+i}));
+// 週ごとの定番の候補（季節に合わせて選定）
+const STANDARD_BY_WEEK = ["国営ひたち海浜公園","JAXA 筑波宇宙センター","高尾山","清水公園 フィールドアスレチック"];
+const STD_NOTE = {"国営ひたち海浜公園":"秋はコキアの紅葉（例年10月上旬〜中旬が見ごろ）。","JAXA 筑波宇宙センター":"10月14日の鉄道の日の前後は乗り物イベントが多い週。雨なら屋内の宇宙展示へ。","高尾山":"涼しくなってきて山歩きにちょうどいい季節。","清水公園 フィールドアスレチック":"水上コースで遊べるのは涼しくなる前の今のうち。"};
+
+state.src = "all";
+function ymd(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function md(d){ return `${d.getMonth()+1}/${d.getDate()}（${"日月火水木金土"[d.getDay()]}）`; }
+function renderWeeks(){
+  const today=new Date(); today.setHours(0,0,0,0);
+  const mon=new Date(today); mon.setDate(today.getDate()-((today.getDay()+6)%7));
+  const host=$("weeks"); host.replaceChildren();
+  const last=new Date(mon); last.setDate(mon.getDate()+27);
+  $("weeks-range").textContent = `${md(mon)} 〜 ${md(last)}`;
+  const c=DATA_CHECKED.split("-");
+  $("checked").textContent = ` 情報の確認日: ${+c[1]}月${+c[2]}日。開催日や料金は変わることがあるので、出かける前に掲載ページか公式サイトで確認してください。`;
+  const upcoming = EVENTS.filter(e=>e.end>=ymd(today));
+  $("stale").replaceChildren();
+  if(!upcoming.some(e=>e.start>ymd(new Date(today.getTime()+7*864e5))))
+    $("stale").append(el("p",{class:"stale"},"このイベント一覧は情報の確認日から日にちがたっています。下の「最新情報を3サイトで見る」から新しい情報を確認するか、Claudeに更新を頼んでください。"));
+  const show = s => state.src==="all" || (s.sources||[]).some(x=>x.site===state.src);
+  for(let w=0; w<4; w++){
+    const ws=new Date(mon); ws.setDate(mon.getDate()+w*7);
+    const we=new Date(ws); we.setDate(ws.getDate()+6);
+    const from = ymd(ws<today?today:ws), to=ymd(we);
+    const evs = EVENTS.filter(e=>e.start<=to && e.end>=from && show(e)).sort((a,b)=>(a.end>to)-(b.end>to) || a.min-b.min);
+    const grid=el("div",{class:"grid"});
+    for(const e of evs) grid.append(card(e,{last:e.end<=to}));
+    const stdName=STANDARD_BY_WEEK[w], std=SPOTS.find(s=>s.name===stdName);
+    if(std && show(std)) grid.append(card({...std,when:"イベントがなくても行ける定番",why:(STD_NOTE[stdName]||"")+std.why},{std:true}));
+    if(!grid.children.length) grid.append(el("div",{class:"empty"},"この情報源の掲載はこの週にはありません。"));
+    const sat=new Date(ws); sat.setDate(ws.getDate()+5);
+    host.append(el("div",{class:"week"},
+      el("div",{class:"week-head"}, el("h3",{},w===0?"今週":w===1?"来週":`${w}週間後`), el("span",{},`${md(ws)} 〜 ${md(we)}　週末は ${md(sat)}・${md(we)}`)),
+      grid));
+  }
+}
+chipGroup($("f-src"), [["all","すべて"],["ikoyo","いこーよ"],["enjoy","レッツエンジョイ東京"],["rurubu","るるぶKids"],["list","定番リスト"]], v=>state.src===v, v=>{state.src=v; renderWeeks();});
+
+load(); buildFilters(); render(); todayPick(); renderWeeks();
 
 // ---- AIに探してもらう ----
 let sample=null, ctl=null;
@@ -359,7 +495,8 @@ $("ai-go").addEventListener("click",async()=>{
 - 季節（今日の日付）と天気に合うもの。雨なら屋内中心、暑ければ水辺や屋内。
 - 実在して現在も営業している施設だけ。閉館した施設は出さない。
 - 次のリストにある場所は既に知っているので、できるだけ別の場所を優先（ぴったりなら2つまで含めてよい）: ${known}
-- 季節限定のイベントや体験があれば理由に書く。
+- 今日から4週間以内に行く想定。季節限定のイベントや体験があれば理由に書く。
+- このページにはすでに次のイベントが載っているので重ねて出さない: ${EVENTS.map(e=>e.name).join("、")}
 JSON配列だけで答えてください。形式:
 [{"name":"施設名","area":"都県 市区町村","driveMinutes":60,"genres":["乗り物"],"indoor":true,"why":"子どもが楽しめる理由を1〜2文","tip":"持ち物や予約などのコツ1文"}]`;
   ctl = new AbortController();
@@ -372,7 +509,7 @@ JSON配列だけで答えてください。形式:
     const items = arr.filter(x=>x&&typeof x.name==="string").slice(0,8).map(x=>({
       name:x.name, area:String(x.area||""), min:Math.max(10,Math.round(+x.driveMinutes||0))||60,
       genres:Array.isArray(x.genres)?x.genres.map(String).slice(0,3):[], indoor:!!x.indoor, cost:"",
-      why:[x.why,x.tip].filter(Boolean).map(String).join(" ／ ")
+      why:[x.why,x.tip].filter(Boolean).map(String).join(" ／ "), sources:[{site:"ai"}]
     })).sort((a,b)=>a.min-b.min);
     $("ai-list").replaceChildren(...items.map(card));
     $("ai-status").textContent = items.length?`${items.length}か所 見つかりました。`:"候補が見つかりませんでした。条件を変えてみてください。";
